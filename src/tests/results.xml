@@ -1,0 +1,9 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1729863280" />
+    <testcase name="bf16_class_test_zero" classname="bf16_class_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_class_tb.py" lineno="60" time="0.0005311965942382812" sim_time_ns="2.001" ratio_time="3766.966922800718" />
+    <testcase name="bf16_class_test_nan" classname="bf16_class_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_class_tb.py" lineno="64" time="0.00019407272338867188" sim_time_ns="2.001" ratio_time="10310.56794103194" />
+    <testcase name="bf16_class_test_inf" classname="bf16_class_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_class_tb.py" lineno="68" time="0.00017690658569335938" sim_time_ns="2.0010000000000003" ratio_time="11311.054318059301" />
+    <testcase name="bf16_class_test_norm" classname="bf16_class_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_class_tb.py" lineno="72" time="0.5007121562957764" sim_time_ns="10000.001" ratio_time="19971.55626094463" />
+  </testsuite>
+</testsuites>

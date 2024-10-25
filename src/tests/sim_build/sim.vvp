@@ -1,0 +1,71 @@
+#! /usr/bin/vvp
+:ivl_version "11.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision - 12;
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/system.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_sys.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_textio.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/v2005_math.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/va_math.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/v2009.vpi";
+S_0x6522520eccf0 .scope package, "$unit" "$unit" 2 1;
+ .timescale -9 -12;
+S_0x6522520ece80 .scope module, "bf16_class" "bf16_class" 3 1;
+ .timescale -9 -12;
+    .port_info 0 /INPUT 16 "i_data";
+    .port_info 1 /OUTPUT 4 "o_flag";
+    .port_info 2 /OUTPUT 7 "o_sig";
+    .port_info 3 /OUTPUT 8 "o_exp";
+    .port_info 4 /OUTPUT 1 "o_sign";
+P_0x6522520ed010 .param/l "EXP_WIDTH" 0 3 3, +C4<00000000000000000000000000001000>;
+P_0x6522520ed050 .param/l "FLAG_WIDTH" 0 3 5, +C4<00000000000000000000000000000100>;
+P_0x6522520ed090 .param/l "NUM_WIDTH" 0 3 2, +C4<00000000000000000000000000010000>;
+P_0x6522520ed0d0 .param/l "SIG_WIDTH" 0 3 4, +C4<00000000000000000000000000000111>;
+L_0x65225213d8e0 .functor AND 1, L_0x65225213d6a0, L_0x65225213d7f0, C4<1>, C4<1>;
+L_0x65225213d9f0 .functor NOT 8, L_0x65225213d530, C4<00000000>, C4<00000000>, C4<00000000>;
+L_0x65225213db90 .functor NOT 7, L_0x65225213d600, C4<0000000>, C4<0000000>, C4<0000000>;
+L_0x65225213dcf0 .functor AND 1, L_0x65225213da60, L_0x65225213dc00, C4<1>, C4<1>;
+L_0x65225213e050 .functor AND 1, L_0x65225213de30, L_0x65225213df20, C4<1>, C4<1>;
+L_0x65225213e0f0 .functor NOT 1, L_0x65225213d8e0, C4<0>, C4<0>, C4<0>;
+L_0x65225213e1f0 .functor NOT 1, L_0x65225213dcf0, C4<0>, C4<0>, C4<0>;
+L_0x65225213e2b0 .functor AND 1, L_0x65225213e0f0, L_0x65225213e1f0, C4<1>, C4<1>;
+L_0x65225213e410 .functor NOT 1, L_0x65225213e050, C4<0>, C4<0>, C4<0>;
+L_0x65225213e4d0 .functor AND 1, L_0x65225213e2b0, L_0x65225213e410, C4<1>, C4<1>;
+v0x6522520ed390_0 .net *"_ivl_12", 7 0, L_0x65225213d9f0;  1 drivers
+v0x65225213c250_0 .net *"_ivl_15", 0 0, L_0x65225213da60;  1 drivers
+v0x65225213c310_0 .net *"_ivl_16", 6 0, L_0x65225213db90;  1 drivers
+v0x65225213c400_0 .net *"_ivl_19", 0 0, L_0x65225213dc00;  1 drivers
+v0x65225213c4c0_0 .net *"_ivl_23", 0 0, L_0x65225213de30;  1 drivers
+v0x65225213c5d0_0 .net *"_ivl_25", 0 0, L_0x65225213df20;  1 drivers
+v0x65225213c690_0 .net *"_ivl_28", 0 0, L_0x65225213e0f0;  1 drivers
+v0x65225213c770_0 .net *"_ivl_30", 0 0, L_0x65225213e1f0;  1 drivers
+v0x65225213c850_0 .net *"_ivl_33", 0 0, L_0x65225213e2b0;  1 drivers
+v0x65225213c910_0 .net *"_ivl_34", 0 0, L_0x65225213e410;  1 drivers
+v0x65225213c9f0_0 .net *"_ivl_7", 0 0, L_0x65225213d6a0;  1 drivers
+v0x65225213cab0_0 .net *"_ivl_9", 0 0, L_0x65225213d7f0;  1 drivers
+o0x714aee0b8258 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v0x65225213cb70_0 .net "i_data", 15 0, o0x714aee0b8258;  0 drivers
+v0x65225213cc50_0 .net "inf", 0 0, L_0x65225213e050;  1 drivers
+v0x65225213cd10_0 .net "nan", 0 0, L_0x65225213d8e0;  1 drivers
+v0x65225213cdd0_0 .net "norm", 0 0, L_0x65225213e4d0;  1 drivers
+v0x65225213ce90_0 .net/s "o_exp", 7 0, L_0x65225213d530;  1 drivers
+v0x65225213d080_0 .net "o_flag", 3 0, L_0x65225213e640;  1 drivers
+v0x65225213d160_0 .net "o_sig", 6 0, L_0x65225213d600;  1 drivers
+v0x65225213d240_0 .net "o_sign", 0 0, L_0x65225213d460;  1 drivers
+v0x65225213d300_0 .net "zero", 0 0, L_0x65225213dcf0;  1 drivers
+L_0x65225213d460 .part o0x714aee0b8258, 15, 1;
+L_0x65225213d530 .part o0x714aee0b8258, 7, 8;
+L_0x65225213d600 .part o0x714aee0b8258, 0, 7;
+L_0x65225213d6a0 .reduce/and L_0x65225213d530;
+L_0x65225213d7f0 .reduce/and L_0x65225213d600;
+L_0x65225213da60 .reduce/and L_0x65225213d9f0;
+L_0x65225213dc00 .reduce/and L_0x65225213db90;
+L_0x65225213de30 .reduce/and L_0x65225213d530;
+L_0x65225213df20 .reduce/nand L_0x65225213d600;
+L_0x65225213e640 .concat [ 1 1 1 1], L_0x65225213e4d0, L_0x65225213e050, L_0x65225213dcf0, L_0x65225213d8e0;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "-";
+    "../hdl/bf16_class.v";
