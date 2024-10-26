@@ -2,6 +2,7 @@ import cocotb
 from random import randint
 from cocotb.triggers import Timer
 from cocotb.binary import BinaryValue
+from utils.bf16 import bf16
 
 # input       i_data -> 16 bit bfloat16 number
 # output      o_flag ->  4 bit {NaN, zero, infinity, normal}
@@ -16,7 +17,7 @@ def generate_zero():
     for i in sign:
         for j in exp:
             for k in sig:
-                val.append((BinaryValue(i+j+k), BinaryValue("0100")))
+                val.append((bf16(i+j+k).bin, BinaryValue("0100")))
     return val
 
 def generate_inf():
@@ -27,18 +28,18 @@ def generate_inf():
     for i in sign:
         for j in exp:
             for k in sig:
-                val.append((BinaryValue(i+j+k), BinaryValue("0010")))
+                val.append((bf16(i+j+k).bin, BinaryValue("0010")))
     return val
 
 def generate_nan():
     sign = ["0", "1"]
     exp = ["1"*8]
-    sig = ["1"*7]
+    sig = ["1"+"0"*6]
     val = []
     for i in sign:
         for j in exp:
             for k in sig:
-                val.append((BinaryValue(i+j+k), BinaryValue("1000")))
+                val.append((bf16(i+j+k).bin, BinaryValue("1000")))
     return val
 
 def generate_norm(size=10000):
@@ -47,7 +48,8 @@ def generate_norm(size=10000):
         sign = str(randint(0, 1))
         exp = str(bin(randint(1, (1<<8)-2))[2:]).zfill(8)
         sig = str(bin(randint(1, (1<<7)-2))[2:]).zfill(7)
-        val.append((BinaryValue(sign+exp+sig), BinaryValue("0001")))
+        input = bf16(sign+exp+sig)
+        val.append((input.bin, BinaryValue("0001")))
     return val
 
 async def bf16_class_test_unit(dut, data):

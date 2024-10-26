@@ -49,13 +49,13 @@ always @(*) begin
     sign = i_data_a[15]^i_data_b[15];
     //handle NaN
     if(flag_a[`NAN] | flag_b[`NAN]) begin
-        o_data = {sign, 15'b11111111_1111111};
+        o_data = {sign, 15'b11111111_1000000};
         o_flag[`NAN] = 1'b1;
     end
     //handle zero 
     else if(flag_a[`ZERO] | flag_b[`ZERO]) begin
         if(flag_a[`INF] | flag_b[`INF]) begin
-            o_data = {sign, 15'b11111111_1111111};
+            o_data = {sign, 15'b11111111_1000000};
             o_flag[`NAN] = 1'b1;
         end
         else begin
@@ -72,8 +72,6 @@ always @(*) begin
     else begin
         
         //shift these to bf16_class module
-
-
         exp_raw = exp_a + exp_b;
         
         if(sig_raw[21] == 1'b1) begin
@@ -86,8 +84,8 @@ always @(*) begin
         end
         
         //if too small, return zero
-
-
+        o_data = {sign, exp[7:0], sig[6:0]};
+        o_flag[`NORM] = 1'b1;
         //else return the normal result
 
     end

@@ -15,9 +15,9 @@ assign o_sign = i_data[NUM_WIDTH-1];
 assign o_exp = i_data[NUM_WIDTH-2:SIG_WIDTH];
 assign o_sig = i_data[SIG_WIDTH-1:0];
 
-assign nan = &o_exp && &o_sig;
+assign nan = &o_exp && |o_sig;
 assign zero = &(~o_exp) && &(~o_sig);
-assign inf = &o_exp && ~&o_sig;
+assign inf = &o_exp && &(~o_sig);
 assign norm = ~nan && ~zero && ~inf;
 
 assign o_flag = {nan, zero, inf, norm};
