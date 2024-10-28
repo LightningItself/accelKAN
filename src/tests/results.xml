@@ -1,7 +1,7 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1729977291" />
-    <testcase name="bf16_mul_test_norm" classname="bf16_mul_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_mul_tb.py" lineno="40" time="0.017813682556152344" sim_time_ns="100.001" ratio_time="5613.718538251513" />
-    <testcase name="bf16_mul_test_zero" classname="bf16_mul_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_mul_tb.py" lineno="49" time="5.4836273193359375e-05" sim_time_ns="0.000999999999990564" ratio_time="18.23610434765401" />
+    <property name="random_seed" value="1730140241" />
+    <testcase name="bf16_mul_test_norm" classname="bf16_mul_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_mul_tb.py" lineno="39" time="0.011775970458984375" sim_time_ns="100.001" ratio_time="8491.954047295108" />
+    <testcase name="bf15_mul_test_edge" classname="bf16_mul_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_mul_tb.py" lineno="56" time="0.011160850524902344" sim_time_ns="49.001000000000005" ratio_time="4390.436005810477" />
   </testsuite>
 </testsuites>
