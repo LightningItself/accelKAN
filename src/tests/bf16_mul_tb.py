@@ -45,10 +45,10 @@ async def bf16_mul_test_norm(dut):
         dut.i_data_a.value = input_a.bin
         dut.i_data_b.value = input_b.bin
         await Timer(1, units="ns")
-        # log("********************************")
-        # log(f"Actual o_data   : {output_mul}")
-        # log(f"Obtained o_data : {dut.o_data.value}")
-        # log(f"Obtained Flag : {dut.o_flag.value}")
+        log("********************************")
+        log(f"Actual o_data   : {output_mul}")
+        log(f"Obtained o_data : {dut.o_data.value}")
+        log(f"Obtained Flag : {dut.o_flag.value}")
         assert(output_mul.bin[14:7] == dut.o_data.value[1:8]), f"Significand mismatch, {input_a}, {input_a.val}, {input_b}, {input_b.val}"
         assert(output_mul.bin == dut.o_data.value), "wrong output"
         assert(output_flag.binstr == dut.o_flag.value), "flag error"
