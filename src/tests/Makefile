@@ -4,7 +4,7 @@ SIM ?= Icarus
 TOPLEVEL_LANG ?= verilog
 
 VERILOG_SOURCES += $(HDL_PATH)/bf16_class.v
-# VERILOG_SOURCES += $(HDL_PATH)/bf16_mul.v
+#VERILOG_SOURCES += $(HDL_PATH)/bf16_mul.v
 VERILOG_SOURCES += $(HDL_PATH)/bf16_add.v
 
 TOPLEVEL = bf16_add

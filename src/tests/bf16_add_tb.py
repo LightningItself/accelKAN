@@ -11,6 +11,22 @@ from random import uniform
 # output      o_data   -> 16 bit bfloat16 multiplication result
 # output      o_flag   ->  4 bit type flag for output number
 
+async def check(store1, store2, dut):
+    log = lambda x : dut._log.info(x)
+    for input_a in store1:
+        for input_b in store2:
+            res = input_a + input_b
+            dut.i_data_a.value = input_a.bin
+            dut.i_data_b.value = input_b.bin
+            await Timer(1, units='ns')
+            log("*********************************")
+            log(input_a)
+            log(input_b)
+            log(res)
+            log(dut.o_data.value)
+            assert(dut.o_data.value == res.bin)
+
+
 @cocotb.test()
 async def bf16_add_test_nan(dut):
     a = [bf16(float('-nan')), bf16(float('nan'))]
@@ -25,25 +41,17 @@ async def bf16_add_test_nan(dut):
 
 @cocotb.test()
 async def bf16_add_test_zero(dut):
-
-    log = lambda x : dut._log.info(x)
-
     store = [bf16(0.0), bf16(-0.0)] 
     store2 = [bf16(2343.343), bf16(-234.343)]
+    await check(store, store, dut)
+    await check(store, store2, dut)
 
-    async def check(store1, store2):
-        for input_a in store1:
-            for input_b in store2:
-                res = input_a + input_b
-                dut.i_data_a.value = input_a.bin
-                dut.i_data_b.value = input_b.bin
-                await Timer(1, units='ns')
-                log("*********************************")
-                log(input_a)
-                log(input_b)
-                log(res)
-                log(dut.o_data.value)
-                assert(dut.o_data.value == res.bin)
+@cocotb.test()
+async def bf16_add_test_inf(dut):
+    store = [bf16(float('inf')), bf16(float('-inf'))]
+    store1 = store + [bf16(0.0), bf16(-0.0), bf16(float('nan')), bf16(float('-nan')), bf16(-2343.434), bf16(2343.4343)]
+    await check(store, store1, dut)
 
-    await check(store, store)
-    await check(store, store2)
+# a = bf16(float('-inf'))
+# b = bf16(float('inf'))
+# print(b+a)

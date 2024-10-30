@@ -84,3 +84,5 @@ class bf16:
 
 # print(inf.val == float('inf'))
 # print(isnan(nan.val))
+
+
