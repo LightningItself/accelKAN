@@ -36,7 +36,7 @@ bf16_class m_class_b (
     sign_b
 );
 
-reg [SIG_WIDTH-1:0] sig_augend, sig_addend;
+reg [SIG_WIDTH-1:0] sig_augend, sig_addend, sig_norm;
 reg signed [EXP_WIDTH:0] exp_augend, exp_addend, exp_norm;
 reg sign_augend, sign_addend;
 reg signed [EXP_WIDTH+1:0] shift_count;
@@ -106,13 +106,12 @@ always @(*) begin
             sign_addend = sign_b;
             shift_count = exp_a - exp_b;
         end
-
         //send to adder
         adder_op_a = {1'b1, sig_augend};
         adder_op_b = ({1'b1, sig_addend} >> shift_count);
 
-        if(!sub) begin //both same sign
-            //handle inf overflow case
+        
+        if(!sub) begin //both same sign    
             if(adder_out[SIG_WIDTH+1]) begin
                 exp_norm = exp_augend+'d128;
                 o_data = {sign_augend, exp_norm[EXP_WIDTH-1:0], adder_out[SIG_WIDTH:1]};
@@ -130,9 +129,51 @@ always @(*) begin
         end
         //handle opp sign
         //no case for inf overflow, result could be zero...
-        else begin
-            o_data = 16'hffff;
-            o_flag[`NORM] = 1'b1;
+        else begin         
+            adder_op_b = -adder_op_b;
+            sig_norm = 'd0;
+            //output at adder_out -> 9 bits
+            //check for 1 starting from 8th bit
+            if(adder_out[7]) begin
+                sig_norm[6:0] = adder_out[6:0];
+                exp_norm = exp_augend + 'd127;
+            end
+            else if(adder_out[6]) begin
+                sig_norm[6:1] = adder_out[5:0];
+                exp_norm = exp_augend + 'd126;
+            end
+            else if(adder_out[5]) begin
+                sig_norm[6:2] = adder_out[4:0];
+                exp_norm = exp_augend + 'd125;
+            end
+            else if(adder_out[4]) begin
+                sig_norm[6:3] = adder_out[3:0];
+                exp_norm = exp_augend + 'd124;
+            end
+            else if(adder_out[3]) begin
+                sig_norm[6:4] = adder_out[2:0];
+                exp_norm = exp_augend + 'd123;
+            end
+            else if(adder_out[2]) begin
+                sig_norm[6:5] = adder_out[1:0];
+                exp_norm = exp_augend + 'd122;
+            end
+            else if(adder_out[1]) begin
+                sig_norm[6] = adder_out[0];
+                exp_norm = exp_augend + 'd121;
+            end
+            else begin
+                sig_norm = 'd0;
+                exp_norm = 'd0;
+            end
+            
+            o_data = {sign_augend, exp_norm[EXP_WIDTH-1:0], sig_norm[SIG_WIDTH-1:0]};
+            if(exp_norm[EXP_WIDTH-1:0] == 'd0) begin
+                o_data[SIG_WIDTH-1:0] = 7'b0000000;
+                o_flag[`ZERO] = 1'b1;
+            end
+            else 
+                o_flag[`NORM] = 1'b1;
         end
         
 

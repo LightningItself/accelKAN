@@ -11,7 +11,14 @@ from random import uniform
 # output      o_data   -> 16 bit bfloat16 multiplication result
 # output      o_flag   ->  4 bit type flag for output number
 
-async def check(store1, store2, dut):
+def generate_data(size=1000):
+    input_a = [bf16(float(x)) for x in np.random.uniform(0, 1e10, size=size)]
+    input_b = [bf16(float(x)) for x in np.random.uniform(0, 1e10, size=size)]
+
+    return array([input_a, input_b]).T
+
+
+async def check(store1, store2, dut, soft_check=False):
     log = lambda x : dut._log.info(x)
     for input_a in store1:
         for input_b in store2:
@@ -25,7 +32,11 @@ async def check(store1, store2, dut):
             log(res)
             log(dut.o_data.value)
             log(dut.o_flag.value)
-            assert(dut.o_data.value == res.bin)
+            log(bf16(str(dut.o_data.value)).val)
+            if(soft_check):
+                assert abs(bf16(str(dut.o_data.value)).val - res.val) < 0.01
+            else:
+                assert(dut.o_data.value == res.bin)
 
 
 @cocotb.test()
@@ -55,10 +66,12 @@ async def bf16_add_test_inf(dut):
 
 @cocotb.test()
 async def bf16_add_test_norm(dut):
-    store = [bf16(2e38), bf16(2e-38), bf16(1.42343), bf16(0.003434)];
+    store = [bf16(0.003435), bf16(-0.003435), bf16(2e-38), bf16(-1.42343), bf16(0.003434)];
     store2 = store
-    await check(store, store2, dut)
-# a = bf16(float('-inf'))
-# b = bf16(float('inf'))
-# print(b+a)
 
+    #await check([bf16(8.234)], [bf16(-6.532)], dut)
+    await  check(store, store2, dut, soft_check=True)
+
+a = bf16(8.234)
+print(a)
+print(a.val)

@@ -1,9 +1,9 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1730477690" />
-    <testcase name="bf16_add_test_nan" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="31" time="0.0009505748748779297" sim_time_ns="6.001" ratio_time="6313.02189716579" />
-    <testcase name="bf16_add_test_zero" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="43" time="0.004943370819091797" sim_time_ns="12.000999999999998" ratio_time="2427.695683611459" />
-    <testcase name="bf16_add_test_inf" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="50" time="0.005947589874267578" sim_time_ns="16.001" ratio_time="2690.3334524172215" />
-    <testcase name="bf16_add_test_norm" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="56" time="0.006466865539550781" sim_time_ns="16.000999999999998" ratio_time="2474.305349653443" />
+    <property name="random_seed" value="1730490446" />
+    <testcase name="bf16_add_test_nan" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="42" time="0.0009260177612304688" sim_time_ns="6.001" ratio_time="6480.437256436664" />
+    <testcase name="bf16_add_test_zero" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="54" time="0.0037021636962890625" sim_time_ns="12.000999999999998" ratio_time="3241.6178712004116" />
+    <testcase name="bf16_add_test_inf" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="61" time="0.004895448684692383" sim_time_ns="16.001" ratio_time="3268.546160035066" />
+    <testcase name="bf16_add_test_norm" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="67" time="0.007478237152099609" sim_time_ns="25.000999999999998" ratio_time="3343.167579672256" />
   </testsuite>
 </testsuites>
