@@ -29,8 +29,6 @@ reg [2*SIG_WIDTH+1:0] sig_raw;
 reg [SIG_WIDTH-1:0] sig;
 reg signed [EXP_WIDTH+1:0] exp_raw, exp, exp_out;
 
-
-
 bf16_class m_class_a (
     i_data_a,
     flag_a,
@@ -101,10 +99,7 @@ always @(*) begin
             o_flag[`NORM] = 1'b1;
         end
     end
-
 end
-
-
 
 endmodule
 

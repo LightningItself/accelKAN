@@ -86,3 +86,6 @@ class bf16:
 # print(isnan(nan.val))
 
 
+a = bf16(0.0)
+b = bf16(-0.0)
+print(a, b, b+a)

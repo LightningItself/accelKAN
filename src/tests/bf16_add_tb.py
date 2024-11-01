@@ -24,6 +24,7 @@ async def check(store1, store2, dut):
             log(input_b)
             log(res)
             log(dut.o_data.value)
+            log(dut.o_flag.value)
             assert(dut.o_data.value == res.bin)
 
 
@@ -42,7 +43,7 @@ async def bf16_add_test_nan(dut):
 @cocotb.test()
 async def bf16_add_test_zero(dut):
     store = [bf16(0.0), bf16(-0.0)] 
-    store2 = [bf16(2343.343), bf16(-234.343)]
+    store2 = store + [bf16(2343.343), bf16(-234.343)]
     await check(store, store, dut)
     await check(store, store2, dut)
 
@@ -52,6 +53,12 @@ async def bf16_add_test_inf(dut):
     store1 = store + [bf16(0.0), bf16(-0.0), bf16(float('nan')), bf16(float('-nan')), bf16(-2343.434), bf16(2343.4343)]
     await check(store, store1, dut)
 
+@cocotb.test()
+async def bf16_add_test_norm(dut):
+    store = [bf16(2e38), bf16(2e-38), bf16(1.42343), bf16(0.003434)];
+    store2 = store
+    await check(store, store2, dut)
 # a = bf16(float('-inf'))
 # b = bf16(float('inf'))
 # print(b+a)
+

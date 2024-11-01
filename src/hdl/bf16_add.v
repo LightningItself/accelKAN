@@ -3,8 +3,6 @@
 `define INF  1
 `define NORM 0
 
-
-
 module bf16_add #(
     parameter EXP_WIDTH = 8,
     parameter SIG_WIDTH = 7, 
@@ -38,13 +36,24 @@ bf16_class m_class_b (
     sign_b
 );
 
+reg [SIG_WIDTH-1:0] sig_augend, sig_addend;
+reg signed [EXP_WIDTH:0] exp_augend, exp_addend, exp_norm;
+reg sign_augend, sign_addend;
+reg signed [EXP_WIDTH+1:0] shift_count;
 
-reg sign;
+reg [SIG_WIDTH:0] sig_sum;
+reg sub;
+
+//signed adder submodule
+reg signed [SIG_WIDTH+1:0] adder_op_a;
+reg signed [SIG_WIDTH+1:0] adder_op_b;
+reg signed [SIG_WIDTH+1:0] adder_out;
+assign adder_out = adder_op_a + adder_op_b;
 
 always @(*) begin
     
     o_flag = 4'b0000;
-    sign = sign_a ^ sign_b;
+    sub = sign_a^sign_b;
     //augend -> larger number (no shifting needed)
     //addend -> smaller number (needs to be shifted)
 
@@ -57,40 +66,80 @@ always @(*) begin
     end
     //handle both zero
     else if(flag_a[`ZERO] & flag_b[`ZERO]) begin
-
         o_data = {sign_a&sign_b, 15'b0000000_00000000};
         o_flag[`ZERO] = 1'b1; 
     end
     //handle one zero
     else if(flag_a[`ZERO] | flag_b[`ZERO]) begin
-
         o_data = flag_b[`ZERO] ? i_data_a : i_data_b;
         o_flag[`ZERO] = 1'b1; 
     end
     //handle inf
     else if(flag_a[`INF] | flag_b[`INF]) begin
+        if(flag_a[`INF] & flag_b[`INF] && sign_a^sign_b) begin
+            o_data = {sign_a^sign_b, 15'b11111111_1000000};
+            o_flag[`NAN] = 1'b1;
+        end
+        else begin
+            o_data = flag_a[`INF] ? i_data_a : i_data_b;
+            o_flag[`INF] = 1'b1;
+        end
+    end
+    //handle normal 
+    else begin
+        //compare inputs and extract augend and addend
+        if(i_data_a[14:0] < i_data_b[14:0]) begin
+            sig_augend = sig_b;
+            sig_addend = sig_a;
+            exp_augend = exp_b;
+            exp_addend = exp_a;
+            sign_augend = sign_b;
+            sign_addend = sign_a;
+            shift_count = exp_b - exp_a;
+        end
+        else begin
+            sig_augend = sig_a;
+            sig_addend = sig_b;
+            exp_augend = exp_a;
+            exp_addend = exp_b;
+            sign_augend = sign_a;
+            sign_addend = sign_b;
+            shift_count = exp_a - exp_b;
+        end
+
+        //send to adder
+        adder_op_a = {1'b1, sig_augend};
+        adder_op_b = ({1'b1, sig_addend} >> shift_count);
+
+        if(!sub) begin //both same sign
+            //handle inf overflow case
+            if(adder_out[SIG_WIDTH+1]) begin
+                exp_norm = exp_augend+'d128;
+                o_data = {sign_augend, exp_norm[EXP_WIDTH-1:0], adder_out[SIG_WIDTH:1]};
+            end
+            else begin
+                exp_norm = exp_augend+'d127;
+                o_data = {sign_augend, exp_norm[EXP_WIDTH-1:0], adder_out[SIG_WIDTH-1:0]};
+            end
+            if(exp_norm[EXP_WIDTH-1:0] == 8'b11111111) begin
+                o_data[SIG_WIDTH-1:0] = 7'b0000000;
+                o_flag[`INF] = 1'b1;
+            end
+            else 
+                o_flag[`NORM] = 1'b1;        
+        end
+        //handle opp sign
+        //no case for inf overflow, result could be zero...
+        else begin
+            o_data = 16'hffff;
+            o_flag[`NORM] = 1'b1;
+        end
         
+
     end
     
     
 
-    //compare inputs and extract augend and addend
-    // if(exp_a < exp_b) begin
-    //     sig_augend[SIG_WIDTH-1:0] = sig_b;
-    //     sig_addend[SIG_WIDTH-1:0] = sig_a;
-    //     sign_augend = sign_b;
-    //     exp_augend = exp_b;
-    //     shift_count = exp_b - exp_a;
-    // end
-    // else begin
-    //     sig_augend[SIG_WIDTH-1:0] = sig_a;
-    //     sig_addend[SIG_WIDTH-1:0] = sig_b;
-    //     sign_augend = sign_a;
-    //     exp_augend = exp_a;
-    //     shift_count = exp_a - exp_b;
-    // end
-
-    // sig_addend_shifted = sig_addend >> shift_count;
 
 
 end
