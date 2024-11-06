@@ -45,9 +45,9 @@ reg [SIG_WIDTH:0] sig_sum;
 reg sub;
 
 //signed adder submodule
-reg signed [SIG_WIDTH+1:0] adder_op_a;
-reg signed [SIG_WIDTH+1:0] adder_op_b;
-reg signed [SIG_WIDTH+1:0] adder_out;
+reg signed [SIG_WIDTH+2:0] adder_op_a;
+reg signed [SIG_WIDTH+2:0] adder_op_b;
+reg signed [SIG_WIDTH+2:0] adder_out;
 assign adder_out = adder_op_a + adder_op_b;
 
 always @(*) begin
@@ -107,18 +107,18 @@ always @(*) begin
             shift_count = exp_a - exp_b;
         end
         //send to adder
-        adder_op_a = {1'b1, sig_augend};
-        adder_op_b = ({1'b1, sig_addend} >> shift_count);
+        adder_op_a = {1'b1, sig_augend, 1'b0};
+        adder_op_b = ({1'b1, sig_addend, 1'b0} >> shift_count);
 
         
         if(!sub) begin //both same sign    
-            if(adder_out[SIG_WIDTH+1]) begin
+            if(adder_out[SIG_WIDTH+2]) begin
                 exp_norm = exp_augend+'d128;
-                o_data = {sign_augend, exp_norm[EXP_WIDTH-1:0], adder_out[SIG_WIDTH:1]};
+                o_data = {sign_augend, exp_norm[EXP_WIDTH-1:0], adder_out[SIG_WIDTH+1:2]};
             end
             else begin
                 exp_norm = exp_augend+'d127;
-                o_data = {sign_augend, exp_norm[EXP_WIDTH-1:0], adder_out[SIG_WIDTH-1:0]};
+                o_data = {sign_augend, exp_norm[EXP_WIDTH-1:0], adder_out[SIG_WIDTH:1]};
             end
             if(exp_norm[EXP_WIDTH-1:0] == 8'b11111111) begin
                 o_data[SIG_WIDTH-1:0] = 7'b0000000;
@@ -134,55 +134,57 @@ always @(*) begin
             sig_norm = 'd0;
             //output at adder_out -> 9 bits
             //check for 1 starting from 8th bit
-            if(adder_out[7]) begin
-                sig_norm[6:0] = adder_out[6:0];
+            if(adder_out[8]) begin
+                sig_norm[6:0] = adder_out[7:1];
                 exp_norm = exp_augend + 'd127;
+            end
+            else if(adder_out[7]) begin
+                sig_norm[6:0] = adder_out[6:0];
+                exp_norm = exp_augend + 'd126;
             end
             else if(adder_out[6]) begin
                 sig_norm[6:1] = adder_out[5:0];
-                exp_norm = exp_augend + 'd126;
+                exp_norm = exp_augend + 'd125;
             end
             else if(adder_out[5]) begin
                 sig_norm[6:2] = adder_out[4:0];
-                exp_norm = exp_augend + 'd125;
+                exp_norm = exp_augend + 'd124;
             end
             else if(adder_out[4]) begin
                 sig_norm[6:3] = adder_out[3:0];
-                exp_norm = exp_augend + 'd124;
+                exp_norm = exp_augend + 'd123;
             end
             else if(adder_out[3]) begin
                 sig_norm[6:4] = adder_out[2:0];
-                exp_norm = exp_augend + 'd123;
+                exp_norm = exp_augend + 'd122;
             end
             else if(adder_out[2]) begin
                 sig_norm[6:5] = adder_out[1:0];
-                exp_norm = exp_augend + 'd122;
+                exp_norm = exp_augend + 'd121;
             end
             else if(adder_out[1]) begin
                 sig_norm[6] = adder_out[0];
-                exp_norm = exp_augend + 'd121;
+                exp_norm = exp_augend + 'd120;
+            end
+            else if(adder_out[0]) begin
+                sig_norm = 'd0;
+                exp_norm = exp_augend + 'd119;
             end
             else begin
                 sig_norm = 'd0;
                 exp_norm = 'd0;
+                sign_augend = 0;
             end
             
             o_data = {sign_augend, exp_norm[EXP_WIDTH-1:0], sig_norm[SIG_WIDTH-1:0]};
-            if(exp_norm[EXP_WIDTH-1:0] == 'd0) begin
+            if(exp_norm[EXP_WIDTH-1:0] == 8'b00000000) begin
                 o_data[SIG_WIDTH-1:0] = 7'b0000000;
                 o_flag[`ZERO] = 1'b1;
             end
             else 
                 o_flag[`NORM] = 1'b1;
         end
-        
-
     end
-    
-    
-
-
-
 end
 
 endmodule

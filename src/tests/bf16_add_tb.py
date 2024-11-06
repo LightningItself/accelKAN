@@ -12,10 +12,10 @@ from random import uniform
 # output      o_flag   ->  4 bit type flag for output number
 
 def generate_data(size=1000):
-    input_a = [bf16(float(x)) for x in np.random.uniform(0, 1e10, size=size)]
-    input_b = [bf16(float(x)) for x in np.random.uniform(0, 1e10, size=size)]
+    input_a = [bf16(float(x)) for x in np.random.uniform(-1e10, 1e10, size=size)]
+    input_b = [bf16(float(x)) for x in np.random.uniform(-1e10, 1e10, size=size)]
 
-    return array([input_a, input_b]).T
+    return input_a, input_b
 
 
 async def check(store1, store2, dut, soft_check=False):
@@ -26,15 +26,21 @@ async def check(store1, store2, dut, soft_check=False):
             dut.i_data_a.value = input_a.bin
             dut.i_data_b.value = input_b.bin
             await Timer(1, units='ns')
-            log("*********************************")
-            log(input_a)
-            log(input_b)
-            log(res)
-            log(dut.o_data.value)
-            log(dut.o_flag.value)
-            log(bf16(str(dut.o_data.value)).val)
+            # log(input_a)
+            # log(input_b)
+            # log(res)
+            # log(dut.o_data.value)
+            # log(dut.o_flag.value)
+            # log(bf16(str(dut.o_data.value)).val)
+            # log(f"{input_a.val, input_b.val, input_a.val+input_b.val}")
+            if(dut.o_data.value != res.bin):
+                log("*********************************")
+                log(input_a)
+                log(input_b)
+                log(res)
+                log(dut.o_data.value)
             if(soft_check):
-                assert abs(bf16(str(dut.o_data.value)).val - res.val) < 0.01
+                assert abs(int(dut.o_data.value.binstr, 2) - int(res.bin.binstr, 2)) <= 2
             else:
                 assert(dut.o_data.value == res.bin)
 
@@ -66,12 +72,21 @@ async def bf16_add_test_inf(dut):
 
 @cocotb.test()
 async def bf16_add_test_norm(dut):
-    store = [bf16(0.003435), bf16(-0.003435), bf16(2e-38), bf16(-1.42343), bf16(0.003434)];
-    store2 = store
+    input_a, input_b = generate_data(100);
 
     #await check([bf16(8.234)], [bf16(-6.532)], dut)
-    await  check(store, store2, dut, soft_check=True)
+    await  check(input_a, input_b, dut, soft_check=True)
 
-a = bf16(8.234)
-print(a)
-print(a.val)
+@cocotb.test()
+async def bf16_add_test_custom(dut):
+    
+    a = bf16("1100111111101100")
+    b = bf16("0100111111101100")
+    await check([a, b], [b, a], dut, soft_check=False)
+
+
+# print(a.val)
+# print(b.val)
+# print((a+b).val)
+# print(int(b.bin.binstr, 2))
+# print(a.val)
