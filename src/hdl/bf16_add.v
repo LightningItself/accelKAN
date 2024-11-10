@@ -48,7 +48,7 @@ reg sub;
 reg signed [SIG_WIDTH+2:0] adder_op_a;
 reg signed [SIG_WIDTH+2:0] adder_op_b;
 reg signed [SIG_WIDTH+2:0] adder_out;
-assign adder_out = adder_op_a + adder_op_b;
+//assign adder_out = adder_op_a + adder_op_b;
 
 always @(*) begin
     
@@ -109,7 +109,7 @@ always @(*) begin
         //send to adder
         adder_op_a = {1'b1, sig_augend, 1'b0};
         adder_op_b = ({1'b1, sig_addend, 1'b0} >> shift_count);
-
+        adder_out = adder_op_a + adder_op_b;
         
         if(!sub) begin //both same sign    
             if(adder_out[SIG_WIDTH+2]) begin
@@ -130,7 +130,8 @@ always @(*) begin
         //handle opp sign
         //no case for inf overflow, result could be zero...
         else begin         
-            adder_op_b = -adder_op_b;
+            //adder_op_b = -adder_op_b;
+            adder_out = adder_op_a - adder_op_b;
             sig_norm = 'd0;
             //output at adder_out -> 9 bits
             //check for 1 starting from 8th bit

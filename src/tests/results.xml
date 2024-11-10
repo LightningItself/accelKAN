@@ -1,10 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1730889615" />
-    <testcase name="bf16_add_test_nan" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="48" time="0.0009217262268066406" sim_time_ns="6.001" ratio_time="6510.610011381273" />
-    <testcase name="bf16_add_test_zero" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="60" time="0.0011472702026367188" sim_time_ns="12.000999999999998" ratio_time="10460.482606816291" />
-    <testcase name="bf16_add_test_inf" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="67" time="0.001428365707397461" sim_time_ns="16.001" ratio_time="11202.313187114005" />
-    <testcase name="bf16_add_test_norm" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="73" time="1.0642027854919434" sim_time_ns="10000.001" ratio_time="9396.70628223112" />
-    <testcase name="bf16_add_test_custom" classname="bf16_add_tb" file="/home/indrayudh/Research/accelKAN/src/tests/bf16_add_tb.py" lineno="80" time="0.0004572868347167969" sim_time_ns="4.000999999998385" ratio_time="8749.431858182077" />
+    <property name="random_seed" value="1731253543" />
+    <testcase name="gemm_w_buff_tb" classname="gemm_w_buff_tb" file="/home/indrayudh/Research/accelKAN/src/tests/gemm_w_buff_tb.py" lineno="10" time="0.0025758743286132812" sim_time_ns="28.001" ratio_time="10870.483737874862" />
   </testsuite>
 </testsuites>
