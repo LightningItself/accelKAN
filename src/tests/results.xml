@@ -1,6 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1731253543" />
-    <testcase name="gemm_w_buff_tb" classname="gemm_w_buff_tb" file="/home/indrayudh/Research/accelKAN/src/tests/gemm_w_buff_tb.py" lineno="10" time="0.0025758743286132812" sim_time_ns="28.001" ratio_time="10870.483737874862" />
+    <property name="random_seed" value="1731303082" />
+    <testcase name="gemm_w_buff_tb" classname="gemm_w_buff_tb" file="/home/indrayudh/Research/accelKAN/src/tests/gemm_w_buff_tb.py" lineno="10" time="0.002482891082763672" sim_time_ns="28.001" ratio_time="11277.578865373536" />
   </testsuite>
 </testsuites>

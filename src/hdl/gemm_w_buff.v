@@ -1,5 +1,6 @@
 module gemm_w_buff #(
     parameter DATA_WIDTH = 16,
+    parameter COLS = 1,
     parameter DEPTH = 512, //should be more than grid size ~~100??
     parameter N_DEPTH = $clog2(DEPTH)
     //this module is for one column... need each of this module for each column in pe array
@@ -9,11 +10,11 @@ module gemm_w_buff #(
     input i_valid,
 
     input i_write,
-    input [DATA_WIDTH-1:0] i_data,
+    input [COLS*DATA_WIDTH-1:0] i_data,
 
-    output [DATA_WIDTH-1:0] o_data,
+    output [COLS*DATA_WIDTH-1:0] o_data
 );
-    reg [DATA_WIDTH-1:0] store [DEPTH-1:0];
+    reg [COLS*DATA_WIDTH-1:0] store [DEPTH-1:0];
     reg [N_DEPTH-1:0] store_ptr;
 
     always @(posedge i_clk) begin
